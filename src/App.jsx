@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import MyInput from './lib/MyInput';
 import Form from './lib/Form';
 import { useForm } from './lib/Form';
@@ -9,10 +9,22 @@ const SubmitButton = () => {
   return <button disabled={!isValid}>Submit</button>;
 };
 
+/** @type {import('./lib/Form').FormValues} */
+const initialFormValues = { email: '', emailCc: '', website: '', name: '' };
+/** @type {import('./lib/Form').FormErrors} */
+const initialFormErrors = { email: '', emailCc: '', website: '', name: '' };
+
 function App() {
+  const [formValues, setFormValues] = useState(initialFormValues);
+  const [formErrors, setFormErrors] = useState(initialFormErrors);
+
   return (
     <Form
       noValidate
+      values={formValues}
+      setValues={setFormValues}
+      errors={formErrors}
+      setErrors={setFormErrors}
       onSubmit={(values) => {
         console.log(values);
       }}
