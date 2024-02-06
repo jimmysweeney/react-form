@@ -49,7 +49,7 @@ function App() {
         <MyInput
           label="CC Email"
           type="email"
-          placeholder="enter your an email to cc"
+          placeholder="enter an email to cc"
           name="emailCc"
         />
         <MyInput
