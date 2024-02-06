@@ -2,11 +2,20 @@ import React, { useState } from 'react';
 import MyInput from './lib/MyInput';
 import Form from './lib/Form';
 import { useForm } from './lib/Form';
+import mockFetch from './lib/mockFetch';
 
-const SubmitButton = () => {
+/**
+ * @param {object} props
+ * @param {boolean} props.isLoading
+ */
+const SubmitButton = ({ isLoading }) => {
   const { isValid } = useForm();
 
-  return <button disabled={!isValid}>Submit</button>;
+  return (
+    <button disabled={!isValid || isLoading}>
+      {isLoading ? 'Loading...' : 'Submit'}
+    </button>
+  );
 };
 
 /** @type {import('./lib/Form').FormValues} */
@@ -29,6 +38,18 @@ const initialFormErrors = {
 function App() {
   const [formValues, setFormValues] = useState(initialFormValues);
   const [formErrors, setFormErrors] = useState(initialFormErrors);
+  const [isLoading, setIsLoading] = useState(false);
+
+  // @ts-ignore
+  const handleSubmit = async (vals) => {
+    setIsLoading(true);
+    const res = await mockFetch(vals);
+    setIsLoading(false);
+
+    if (res.status === 'error') {
+      setFormErrors(res.data);
+    }
+  };
 
   return (
     <Form
@@ -37,9 +58,7 @@ function App() {
       setValues={setFormValues}
       errors={formErrors}
       setErrors={setFormErrors}
-      onSubmit={(values) => {
-        console.log(values);
-      }}
+      onSubmit={handleSubmit}
       validators={{
         email: (emailValue) => {
           if (emailValue === 'llama@gmail.com') {
@@ -98,7 +117,7 @@ function App() {
           name="puppies"
           required
         />
-        <SubmitButton />
+        <SubmitButton isLoading={isLoading} />
       </div>
     </Form>
   );
