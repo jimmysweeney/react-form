@@ -10,9 +10,21 @@ const SubmitButton = () => {
 };
 
 /** @type {import('./lib/Form').FormValues} */
-const initialFormValues = { email: '', emailCc: '', website: '', name: '' };
+const initialFormValues = {
+  email: '',
+  emailCc: '',
+  website: '',
+  name: '',
+  puppies: 3,
+};
 /** @type {import('./lib/Form').FormErrors} */
-const initialFormErrors = { email: '', emailCc: '', website: '', name: '' };
+const initialFormErrors = {
+  email: '',
+  emailCc: '',
+  website: '',
+  name: '',
+  puppies: '',
+};
 
 function App() {
   const [formValues, setFormValues] = useState(initialFormValues);
@@ -75,6 +87,15 @@ function App() {
           type="text"
           placeholder="enter your name"
           name="name"
+          required
+        />
+        <MyInput
+          label="Number of puppies"
+          type="number"
+          min={3}
+          max={99}
+          placeholder="how many do you need?"
+          name="puppies"
           required
         />
         <SubmitButton />
