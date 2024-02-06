@@ -5,9 +5,8 @@ import { useInput } from './Form';
 
 /**
  * @typedef PropsI
- * @property {string} name
  * @property {string} label
- * @property {(value: import('./Form').FormValue) => string} [validator]
+ * @property {string} name
  */
 
 /**
