@@ -9,8 +9,8 @@ import hasError from './hasError';
  * @typedef FormContextValueI
  * @property {FormErrors} errors
  * @property {boolean} isValid
- * @property {(errors: FormErrors) => void} setErrors
- * @property {(values: FormValues) => void} setValues
+ * @property {(errors: FormErrors) => void} onErrorsChange
+ * @property {(values: FormValues) => void} onValuesChange
  * @property {Record<string, (value: FormValue, formValues?: FormValues) => string>} [validators]
  * @property {FormValues} values
  * */
@@ -19,9 +19,9 @@ import hasError from './hasError';
 const formContext = createContext({
   errors: {},
   /** @type {boolean} */
-  isValid: true,
-  setErrors: (errors) => {},
-  setValues: (values) => {},
+  isValid: false,
+  onErrorsChange: (errors) => {},
+  onValuesChange: (values) => {},
   values: {},
 });
 
@@ -31,16 +31,17 @@ export const useForm = () => useContext(formContext);
  * @param {string} inputName
  */
 export const useInput = (inputName) => {
-  const { values, setValues, errors, setErrors, validators } = useForm();
+  const { values, onValuesChange, errors, onErrorsChange, validators } =
+    useForm();
 
   /** @param {string} error */
   const setError = (error) => {
-    setErrors({ ...errors, [inputName]: error });
+    onErrorsChange({ ...errors, [inputName]: error });
   };
 
   /** @param {FormValue} value */
   const setValue = (value) => {
-    setValues({ ...values, [inputName]: value });
+    onValuesChange({ ...values, [inputName]: value });
   };
 
   const error = errors[inputName];
@@ -65,8 +66,8 @@ export const useInput = (inputName) => {
  * @property {React.ReactNode} children
  * @property {FormErrors} errors
  * @property {(values: FormValues) => void} onSubmit
- * @property {(errors: FormErrors) => void} setErrors
- * @property {(values: FormValues) => void} setValues
+ * @property {(errors: FormErrors) => void} onErrorsChange
+ * @property {(values: FormValues) => void} onValuesChange
  * @property {Record<string, (value: FormValue, formValues?: FormValues) => string>} validators
  * @property {FormValues} values
  */
@@ -79,8 +80,8 @@ const Form = ({
   errors,
   noValidate = true,
   onSubmit,
-  setErrors,
-  setValues,
+  onErrorsChange,
+  onValuesChange,
   validators,
   values,
   ...rest
@@ -110,7 +111,7 @@ const Form = ({
       newErrors[inputEl.name] = error;
     });
 
-    setErrors(newErrors);
+    onErrorsChange(newErrors);
 
     if (Object.values(newErrors).some((err) => Boolean(err))) {
       return;
@@ -123,12 +124,12 @@ const Form = ({
     () => ({
       errors,
       isValid: Object.values(errors).every((err) => !err),
-      setErrors,
-      setValues,
+      onErrorsChange,
+      onValuesChange,
       validators,
       values,
     }),
-    [errors, setErrors, setValues, validators, values]
+    [errors, onErrorsChange, onValuesChange, validators, values]
   );
 
   return (

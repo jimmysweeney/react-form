@@ -55,9 +55,9 @@ function App() {
     <Form
       noValidate
       values={formValues}
-      setValues={setFormValues}
+      onValuesChange={setFormValues}
       errors={formErrors}
-      setErrors={setFormErrors}
+      onErrorsChange={setFormErrors}
       onSubmit={handleSubmit}
       validators={{
         email: (emailValue) => {
