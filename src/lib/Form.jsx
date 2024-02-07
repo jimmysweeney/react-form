@@ -11,7 +11,7 @@ import hasError from './hasError';
  * @property {boolean} isValid
  * @property {(errors: FormErrors) => void} setErrors
  * @property {(values: FormValues) => void} setValues
- * @property {Record<string, (value: FormValue, formValues?: FormValues) => string>} validators
+ * @property {Record<string, (value: FormValue, formValues?: FormValues) => string>} [validators]
  * @property {FormValues} values
  * */
 
@@ -22,7 +22,6 @@ const formContext = createContext({
   isValid: true,
   setErrors: (errors) => {},
   setValues: (values) => {},
-  validators: {},
   values: {},
 });
 
@@ -47,7 +46,7 @@ export const useInput = (inputName) => {
   const error = errors[inputName];
   const value = values[inputName];
 
-  const validator = validators[inputName] || function () {};
+  const validator = validators?.[inputName] || function () {};
 
   /** @param {HTMLInputElement} inputElement */
   const validate = (inputElement) => {
@@ -95,7 +94,7 @@ const Form = ({
 
     // @ts-ignore
     event.target.querySelectorAll('input').forEach((inputEl) => {
-      const validator = validators[inputEl.name] || function () {};
+      const validator = validators?.[inputEl.name] || function () {};
 
       const error = validator(inputEl.value, values) || hasError(inputEl);
 
